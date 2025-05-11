@@ -7,6 +7,7 @@ from typing import Annotated
 from fastapi import APIRouter, Depends, Response, status
 from sqlalchemy import select
 from src.models.books import Book
+from src.models.sellers import Seller
 from src.schemas import IncomingBook, ReturnedAllbooks, ReturnedBook
 from icecream import ic
 from sqlalchemy.ext.asyncio import AsyncSession
@@ -31,19 +32,20 @@ async def create_book(
     # session = get_async_session() вместо этого мы используем иньекцию зависимостей DBSession
 
     # это - бизнес логика. Обрабатываем данные, сохраняем, преобразуем и т.д.
-    new_book = Book(
-        **{
-            "title": book.title,
-            "author": book.author,
-            "year": book.year,
-            "pages": book.pages,
-        }
-    )
-
-    session.add(new_book)
-    await session.flush()
-
-    return new_book
+    if update_seller := await session.get(Seller, book.seller_id):
+        new_book = Book(
+            **{
+                "title": book.title,
+                "author": book.author,
+                "year": book.year,
+                "pages": book.pages,
+                "seller_id": book.seller_id
+                }
+                )
+        session.add(new_book)
+        await session.flush()
+        return new_book
+    return Response(status_code=status.HTTP_422_UNPROCESSABLE_ENTITY)
 
 
 # Ручка, возвращающая все книги
@@ -92,3 +94,5 @@ async def update_book(book_id: int, new_book_data: ReturnedBook, session: DBSess
         return updated_book
 
     return Response(status_code=status.HTTP_404_NOT_FOUND)
+
+

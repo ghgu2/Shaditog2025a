@@ -1,18 +1,51 @@
-# Набор тестов для эндпоинтов которые можно запустить
-# в VSCode с помощью плагина  REST Client
-# Найти можно по идентификатору: humao.rest-client
-# Tunder Client не позволяет свободно импортировать-экспортировать записи,
-# поэтому перешел на этот плагин. Он тоже хорош :-)
+# Создаём селлера
+POST http://localhost:8000/api/v1/seller/ HTTP/1.1
+content-type: application/json
+
+{
+    "first_name": "Джордж",
+    "last_name": "Мартин",
+    "e_mail": "martin200@gmail.com",
+    "password": "never6"
+}
+
+###
+
+# Список селлеров
+GET http://localhost:8000/api/v1/seller/ HTTP/1.1 
+
+###
+
+# Обновляем поля в данных о продавце
+PUT http://localhost:8000/api/v1/seller/3 HTTP/1.1
+content-type: application/json
+
+{
+    "seller_id": 100,
+    "first_name": "Игорь",
+    "last_name": "Абрагимович",
+    "e_mail": "abra@mail.ru",
+    "password": "abramtop1"
+}
+
+###
+
+# Удаляем продавца
+DELETE http://localhost:8000/api/v1/seller/4 HTTP/1.1
+content-type: application/json
+
+###
 
 # Создаем книгу
 POST http://localhost:8000/api/v1/books/ HTTP/1.1
 Content-Type: application/json
 
 {
-    "title": "Clean Architecture",
+    "title": "Богатый папа Бедный папа 2",
     "author": " Robert Martin",
-    "count_pages": 300,
-    "year": 2025
+    "count_pages": 120,
+    "year": 2025,
+    "seller_id": 5
 }
 
 ###
@@ -23,17 +56,12 @@ GET http://localhost:8000/api/v1/books/ HTTP/1.1
 ###
 
 # Получаем одну книгу по ее ИД
-GET http://localhost:8000/api/v1/books/1 HTTP/1.1
-
-###
-
-# Удаляем книгу
-DELETE http://localhost:8000/api/v1/books/1 HTTP/1.1
+GET http://localhost:8000/api/v1/books/6 HTTP/1.1
 
 ###
 
 # Обновляем поля в данных о книге
-PUT http://localhost:8000/api/v1/books/1 HTTP/1.1
+PUT http://localhost:8000/api/v1/books/6 HTTP/1.1
 Content-Type: application/json
 
 {
@@ -41,7 +69,22 @@ Content-Type: application/json
     "title": "Clean Code",
     "author": "Robert Martin",
     "year": 2022,
-    "pages": 310
+    "pages": 310,
+    "seller_id": 6
 }
 
 ###
+
+# Получаем информацию о селлере по его ИД
+GET http://localhost:8000/api/v1/seller/99 HTTP/1.1
+
+###
+
+# Удаляем книгу
+DELETE http://localhost:8000/api/v1/books/7 HTTP/1.1
+
+###
+
+# Удаляем селлера
+DELETE http://localhost:8000/api/v1/seller/3 HTTP/1.1
+content-type: application/json
